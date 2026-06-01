@@ -1,0 +1,56 @@
+### REST - listar musicas
+GET http://127.0.0.1:8001/musics
+
+### REST - criar usuario
+POST http://127.0.0.1:8001/users
+Content-Type: application/json
+
+{
+  "name": "Usuario Demo",
+  "age": 31
+}
+
+### REST - atualizar playlist
+PUT http://127.0.0.1:8001/playlists/1
+Content-Type: application/json
+
+{
+  "name": "Playlist Atualizada",
+  "userId": 1,
+  "musicIds": [1, 2, 3, 4, 5]
+}
+
+### REST - playlists de um usuario
+GET http://127.0.0.1:8001/users/1/playlists
+
+### REST - musicas de uma playlist
+GET http://127.0.0.1:8001/playlists/1/musics
+
+### REST - playlists que contem uma musica
+GET http://127.0.0.1:8001/musics/1/playlists
+
+### GraphQL - consultas
+POST http://127.0.0.1:8003/graphql
+Content-Type: application/json
+
+{
+  "query": "{ musicsByPlaylist(playlistId: 1) { id name artist } }"
+}
+
+### GraphQL - mutation
+POST http://127.0.0.1:8003/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { createUser(input: { name: \"Usuario GraphQL\", age: 29 }) { id name age } }"
+}
+
+### SOAP - listar musicas
+POST http://127.0.0.1:8004
+Content-Type: text/xml
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <listMusics xmlns="music.streaming.soap"/>
+  </soap:Body>
+</soap:Envelope>

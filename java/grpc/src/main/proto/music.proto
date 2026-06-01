@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package music;
+
+option java_multiple_files = true;
+option java_package = "com.music.grpc";
+option java_outer_classname = "MusicProto";
+
+message Empty {}
+
+message IdRequest {
+  int32 id = 1;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  int32 age = 3;
+}
+
+message Music {
+  int32 id = 1;
+  string name = 2;
+  string artist = 3;
+}
+
+message Playlist {
+  int32 id = 1;
+  string name = 2;
+  int32 user_id = 3;
+  repeated int32 music_ids = 4;
+}
+
+message UserList {
+  repeated User items = 1;
+}
+
+message MusicList {
+  repeated Music items = 1;
+}
+
+message PlaylistList {
+  repeated Playlist items = 1;
+}
+
+message UserRequest {
+  User user = 1;
+}
+
+message MusicRequest {
+  Music music = 1;
+}
+
+message PlaylistRequest {
+  Playlist playlist = 1;
+}
+
+service UserService {
+  rpc ListUsers(Empty) returns (UserList);
+  rpc GetUser(IdRequest) returns (User);
+  rpc CreateUser(UserRequest) returns (User);
+  rpc UpdateUser(UserRequest) returns (User);
+  rpc DeleteUser(IdRequest) returns (Empty);
+}
+
+service MusicService {
+  rpc ListMusics(Empty) returns (MusicList);
+  rpc GetMusic(IdRequest) returns (Music);
+  rpc CreateMusic(MusicRequest) returns (Music);
+  rpc UpdateMusic(MusicRequest) returns (Music);
+  rpc DeleteMusic(IdRequest) returns (Empty);
+}
+
+service PlaylistService {
+  rpc ListPlaylists(Empty) returns (PlaylistList);
+  rpc GetPlaylist(IdRequest) returns (Playlist);
+  rpc CreatePlaylist(PlaylistRequest) returns (Playlist);
+  rpc UpdatePlaylist(PlaylistRequest) returns (Playlist);
+  rpc DeletePlaylist(IdRequest) returns (Empty);
+  rpc ListPlaylistsByUser(IdRequest) returns (PlaylistList);
+  rpc ListMusicsByPlaylist(IdRequest) returns (MusicList);
+  rpc ListPlaylistsByMusic(IdRequest) returns (PlaylistList);
+}

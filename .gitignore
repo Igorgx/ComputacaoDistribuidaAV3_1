@@ -1,0 +1,11 @@
+.venv/
+.tools/
+build/
+target/
+__pycache__/
+*.pyc
+report/results/*.html
+report/results/*.csv
+report/results/*.log
+report/results/*.svg
+java/grpc/target/
