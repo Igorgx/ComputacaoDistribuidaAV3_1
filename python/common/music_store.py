@@ -71,13 +71,15 @@ class MusicStore:
         return max(table.keys(), default=0) + 1
 
     def list_users(self) -> list[User]:
-        return list(self.users.values())
+        with self._lock:
+            return list(self.users.values())
 
     def get_user(self, user_id: int) -> User:
-        try:
-            return self.users[user_id]
-        except KeyError as exc:
-            raise NotFoundError("usuario nao encontrado") from exc
+        with self._lock:
+            try:
+                return self.users[user_id]
+            except KeyError as exc:
+                raise NotFoundError("usuario nao encontrado") from exc
 
     def create_user(self, data: dict) -> User:
         with self._lock:
@@ -106,13 +108,15 @@ class MusicStore:
             }
 
     def list_musics(self) -> list[Music]:
-        return list(self.musics.values())
+        with self._lock:
+            return list(self.musics.values())
 
     def get_music(self, music_id: int) -> Music:
-        try:
-            return self.musics[music_id]
-        except KeyError as exc:
-            raise NotFoundError("musica nao encontrada") from exc
+        with self._lock:
+            try:
+                return self.musics[music_id]
+            except KeyError as exc:
+                raise NotFoundError("musica nao encontrada") from exc
 
     def create_music(self, data: dict) -> Music:
         with self._lock:
@@ -140,13 +144,15 @@ class MusicStore:
                 playlist.musicIds = [mid for mid in playlist.musicIds if mid != music_id]
 
     def list_playlists(self) -> list[Playlist]:
-        return list(self.playlists.values())
+        with self._lock:
+            return list(self.playlists.values())
 
     def get_playlist(self, playlist_id: int) -> Playlist:
-        try:
-            return self.playlists[playlist_id]
-        except KeyError as exc:
-            raise NotFoundError("playlist nao encontrada") from exc
+        with self._lock:
+            try:
+                return self.playlists[playlist_id]
+            except KeyError as exc:
+                raise NotFoundError("playlist nao encontrada") from exc
 
     def _validate_playlist(self, user_id: int, music_ids: list[int]) -> None:
         self.get_user(user_id)
@@ -181,18 +187,25 @@ class MusicStore:
             del self.playlists[playlist_id]
 
     def playlists_by_user(self, user_id: int) -> list[Playlist]:
-        self.get_user(user_id)
-        return [playlist for playlist in self.playlists.values() if playlist.userId == user_id]
+        with self._lock:
+            self.get_user(user_id)
+            return [
+                playlist for playlist in self.playlists.values() if playlist.userId == user_id
+            ]
 
     def musics_by_playlist(self, playlist_id: int) -> list[Music]:
-        playlist = self.get_playlist(playlist_id)
-        return [self.get_music(music_id) for music_id in playlist.musicIds]
+        with self._lock:
+            playlist = self.get_playlist(playlist_id)
+            return [self.get_music(music_id) for music_id in playlist.musicIds]
 
     def playlists_by_music(self, music_id: int) -> list[Playlist]:
-        self.get_music(music_id)
-        return [
-            playlist for playlist in self.playlists.values() if music_id in playlist.musicIds
-        ]
+        with self._lock:
+            self.get_music(music_id)
+            return [
+                playlist
+                for playlist in self.playlists.values()
+                if music_id in playlist.musicIds
+            ]
 
 
 store = MusicStore()

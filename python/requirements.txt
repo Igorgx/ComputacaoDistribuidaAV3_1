@@ -8,3 +8,4 @@ spyne==2.14.0
 lxml==5.3.0
 gevent==24.11.1
 locust==2.31.8
+matplotlib==3.10.0

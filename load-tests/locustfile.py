@@ -6,6 +6,7 @@ from locust import HttpUser, User, between, events, task
 
 
 PROTOCOL = os.getenv("PROTOCOL", "rest").lower()
+GRPC_GEVENT_READY = False
 
 
 class MusicHttpUser(HttpUser):
@@ -122,14 +123,27 @@ class MusicGrpcUser(User):
     wait_time = between(0.1, 0.8)
 
     def on_start(self):
+        global GRPC_GEVENT_READY
         import grpc
+        import grpc.experimental.gevent as grpc_gevent
         from python.grpc.generated import music_pb2, music_pb2_grpc
+
+        if not GRPC_GEVENT_READY:
+            grpc_gevent.init_gevent()
+            GRPC_GEVENT_READY = True
 
         self.pb = music_pb2
         self.channel = grpc.insecure_channel(self.host.replace("http://", "").replace("https://", ""))
         self.users = music_pb2_grpc.UserServiceStub(self.channel)
         self.musics = music_pb2_grpc.MusicServiceStub(self.channel)
         self.playlists = music_pb2_grpc.PlaylistServiceStub(self.channel)
+
+    def on_stop(self):
+        if hasattr(self, "channel"):
+            try:
+                self.channel.close()
+            except RuntimeError:
+                pass
 
     def timed(self, name, fn):
         started = time.perf_counter()
