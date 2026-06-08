@@ -45,7 +45,7 @@ def read_stats(path: Path) -> dict[str, float]:
 
 
 def load_results() -> list[dict[str, object]]:
-    results = []
+    latest_by_label: dict[str, Path] = {}
     for path in sorted(RESULTS.glob("*_stats.csv")):
         label = normalize_label(path.name.removesuffix("_stats.csv"))
         if label.startswith("smoke_"):
@@ -53,6 +53,13 @@ def load_results() -> list[dict[str, object]]:
         language, technology, load = parse_label(label)
         if load not in {"moderada", "alta"}:
             continue
+        previous = latest_by_label.get(label)
+        if previous is None or path.stat().st_mtime > previous.stat().st_mtime:
+            latest_by_label[label] = path
+
+    results = []
+    for label, path in sorted(latest_by_label.items()):
+        language, technology, load = parse_label(label)
         data = read_stats(path)
         results.append(
             {
@@ -188,6 +195,127 @@ def plot_load_delta(results: list[dict[str, object]]) -> None:
     plt.close(fig)
 
 
+def result_lookup(results: list[dict[str, object]]) -> dict[tuple[str, str, str], dict[str, object]]:
+    return {
+        (str(item["language"]), str(item["technology"]), str(item["load"])): item
+        for item in results
+    }
+
+
+def plot_by_remote_system(
+    results: list[dict[str, object]],
+    metric: str,
+    title: str,
+    unit: str,
+    filename: str,
+) -> None:
+    lookup = result_lookup(results)
+    technologies = ["rest", "grpc", "graphql", "soap"]
+    bars = [
+        ("python", "moderada", "Python moderada", "#93c5fd"),
+        ("python", "alta", "Python alta", "#2563eb"),
+        ("java", "moderada", "Java moderada", "#fdba74"),
+        ("java", "alta", "Java alta", "#ea580c"),
+    ]
+
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    axes = axes.flatten()
+    for ax, technology in zip(axes, technologies):
+        labels = [item[2] for item in bars]
+        values = [
+            float(lookup.get((language, technology, load), {}).get(metric, 0))
+            for language, load, _label, _color in bars
+        ]
+        colors = [item[3] for item in bars]
+        drawn = ax.bar(labels, values, color=colors)
+        ax.set_title(technology.upper(), fontsize=12, fontweight="bold")
+        ax.set_ylabel(unit)
+        ax.grid(axis="y", linestyle="--", alpha=0.25)
+        ax.tick_params(axis="x", rotation=25)
+        ax.spines[["top", "right"]].set_visible(False)
+        max_value = max(values) if values else 0
+        offset = max_value * 0.02 if max_value else 0.5
+        for bar, value in zip(drawn, values):
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                bar.get_height() + offset,
+                f"{value:.2f}",
+                ha="center",
+                va="bottom",
+                fontsize=8,
+            )
+    fig.suptitle(title, fontsize=15, fontweight="bold")
+    fig.subplots_adjust(top=0.9, bottom=0.12, left=0.08, right=0.98, hspace=0.45, wspace=0.25)
+    fig.savefig(CHARTS / f"{filename}.png", dpi=180)
+    fig.savefig(CHARTS / f"{filename}.svg")
+    plt.close(fig)
+
+
+def plot_by_language(
+    results: list[dict[str, object]],
+    metric: str,
+    title: str,
+    unit: str,
+    filename: str,
+) -> None:
+    lookup = result_lookup(results)
+    languages = ["python", "java"]
+    technologies = ["rest", "grpc", "graphql", "soap"]
+    load_colors = {"moderada": "#60a5fa", "alta": "#2563eb"}
+
+    fig, axes = plt.subplots(1, 2, figsize=(15, 7), sharey=False)
+    for ax, language in zip(axes, languages):
+        x = range(len(technologies))
+        moderate = [
+            float(lookup.get((language, technology, "moderada"), {}).get(metric, 0))
+            for technology in technologies
+        ]
+        high = [
+            float(lookup.get((language, technology, "alta"), {}).get(metric, 0))
+            for technology in technologies
+        ]
+        width = 0.36
+        moderate_bars = ax.bar(
+            [item - width / 2 for item in x],
+            moderate,
+            width,
+            label="Moderada",
+            color=load_colors["moderada"],
+        )
+        high_bars = ax.bar(
+            [item + width / 2 for item in x],
+            high,
+            width,
+            label="Alta",
+            color=load_colors["alta"],
+        )
+        ax.set_title(language.capitalize(), fontsize=12, fontweight="bold")
+        ax.set_xticks(list(x), [item.upper() for item in technologies])
+        ax.set_ylabel(unit)
+        ax.grid(axis="y", linestyle="--", alpha=0.25)
+        ax.spines[["top", "right"]].set_visible(False)
+        max_value = max([*moderate, *high]) if moderate or high else 0
+        offset = max_value * 0.02 if max_value else 0.5
+        for group in [moderate_bars, high_bars]:
+            for bar in group:
+                value = bar.get_height()
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    value + offset,
+                    f"{value:.2f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=8,
+                    rotation=90 if len(f"{value:.2f}") > 6 else 0,
+                )
+        ax.legend()
+    fig.suptitle(title, fontsize=15, fontweight="bold")
+    fig.subplots_adjust(top=0.88, bottom=0.14, left=0.08, right=0.98, wspace=0.25)
+    fig.savefig(CHARTS / f"{filename}.png", dpi=180)
+    fig.savefig(CHARTS / f"{filename}.svg")
+    plt.close(fig)
+
+
 def main() -> None:
     RESULTS.mkdir(parents=True, exist_ok=True)
     CHARTS.mkdir(parents=True, exist_ok=True)
@@ -203,6 +331,14 @@ def main() -> None:
     plot_horizontal(results, "failure_rate", "Taxa de falha", "%", "failure_rate_percent")
     plot_horizontal(results, "failures", "Falhas absolutas", "falhas", "failures_absolute")
     plot_load_delta(results)
+    plot_by_remote_system(results, "rps", "Sistemas remotos - requisicoes por segundo", "req/s", "remote_systems_rps")
+    plot_by_remote_system(results, "avg", "Sistemas remotos - tempo medio de resposta", "ms", "remote_systems_avg")
+    plot_by_remote_system(results, "p95", "Sistemas remotos - percentil 95", "ms", "remote_systems_p95")
+    plot_by_remote_system(results, "failure_rate", "Sistemas remotos - taxa de falha", "%", "remote_systems_failure_rate")
+    plot_by_language(results, "rps", "Por linguagem - requisicoes por segundo", "req/s", "language_rps")
+    plot_by_language(results, "avg", "Por linguagem - tempo medio de resposta", "ms", "language_avg")
+    plot_by_language(results, "p95", "Por linguagem - percentil 95", "ms", "language_p95")
+    plot_by_language(results, "failure_rate", "Por linguagem - taxa de falha", "%", "language_failure_rate")
 
     print(f"Resumo: {RESULTS / 'summary_metrics.csv'}")
     for path in sorted(CHARTS.glob("*")):

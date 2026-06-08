@@ -44,7 +44,7 @@ public class RestServer {
         }
         if (path.equals("/users") && method.equals("POST")) {
             String body = HttpUtil.readBody(exchange);
-            var user = store.createUser(JsonUtil.intField(body, "id", null), JsonUtil.stringField(body, "name", ""), JsonUtil.intField(body, "age", 0));
+            var user = store.createUser(JsonUtil.intField(body, "id", 0), JsonUtil.stringField(body, "name", ""), JsonUtil.intField(body, "age", 0));
             HttpUtil.send(exchange, 201, "application/json", JsonUtil.user(user));
             return;
         }
@@ -70,7 +70,7 @@ public class RestServer {
         }
         if (path.equals("/musics") && method.equals("POST")) {
             String body = HttpUtil.readBody(exchange);
-            var music = store.createMusic(JsonUtil.intField(body, "id", null), JsonUtil.stringField(body, "name", ""), JsonUtil.stringField(body, "artist", ""));
+            var music = store.createMusic(JsonUtil.intField(body, "id", 0), JsonUtil.stringField(body, "name", ""), JsonUtil.stringField(body, "artist", ""));
             HttpUtil.send(exchange, 201, "application/json", JsonUtil.music(music));
             return;
         }
@@ -96,7 +96,7 @@ public class RestServer {
         }
         if (path.equals("/playlists") && method.equals("POST")) {
             String body = HttpUtil.readBody(exchange);
-            var playlist = store.createPlaylist(JsonUtil.intField(body, "id", null), JsonUtil.stringField(body, "name", ""), JsonUtil.intField(body, "userId", 0), JsonUtil.intListField(body, "musicIds"));
+            var playlist = store.createPlaylist(JsonUtil.intField(body, "id", 0), JsonUtil.stringField(body, "name", ""), JsonUtil.intField(body, "userId", 0), JsonUtil.intListField(body, "musicIds"));
             HttpUtil.send(exchange, 201, "application/json", JsonUtil.playlist(playlist));
             return;
         }

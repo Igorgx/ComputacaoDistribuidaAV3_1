@@ -28,7 +28,7 @@ public class GraphQlServer {
                     return;
                 }
                 String body = HttpUtil.readBody(exchange);
-                String query = JsonUtil.stringField(body, "query", body).replace("\\\"", "\"");
+                String query = queryFromBody(body);
                 HttpUtil.send(exchange, 200, "application/json", execute(query));
             } catch (NotFoundException exc) {
                 HttpUtil.send(exchange, 200, "application/json", "{\"errors\":[{\"message\":" + JsonUtil.quote(exc.getMessage()) + "}]}");
@@ -44,7 +44,7 @@ public class GraphQlServer {
 
     private static String execute(String query) {
         if (query.contains("createUser")) {
-            var user = store.createUser(intArg(query, "id", null), stringArg(query, "name", ""), intArg(query, "age", 0));
+            var user = store.createUser(intArg(query, "id", 0), stringArg(query, "name", ""), intArg(query, "age", 0));
             return data("createUser", JsonUtil.user(user));
         }
         if (query.contains("updateUser")) {
@@ -56,7 +56,7 @@ public class GraphQlServer {
             return data("deleteUser", "true");
         }
         if (query.contains("createMusic")) {
-            var music = store.createMusic(intArg(query, "id", null), stringArg(query, "name", ""), stringArg(query, "artist", ""));
+            var music = store.createMusic(intArg(query, "id", 0), stringArg(query, "name", ""), stringArg(query, "artist", ""));
             return data("createMusic", JsonUtil.music(music));
         }
         if (query.contains("updateMusic")) {
@@ -68,7 +68,7 @@ public class GraphQlServer {
             return data("deleteMusic", "true");
         }
         if (query.contains("createPlaylist")) {
-            var playlist = store.createPlaylist(intArg(query, "id", null), stringArg(query, "name", ""), intArg(query, "userId", 0), intListArg(query, "musicIds"));
+            var playlist = store.createPlaylist(intArg(query, "id", 0), stringArg(query, "name", ""), intArg(query, "userId", 0), intListArg(query, "musicIds"));
             return data("createPlaylist", JsonUtil.playlist(playlist));
         }
         if (query.contains("updatePlaylist")) {
@@ -93,6 +93,17 @@ public class GraphQlServer {
 
     private static String data(String field, String value) {
         return "{\"data\":{\"" + field + "\":" + value + "}}";
+    }
+
+    private static String queryFromBody(String body) {
+        Matcher matcher = Pattern.compile("\"query\"\\s*:\\s*\"((?:\\\\.|[^\"])*)\"", Pattern.DOTALL).matcher(body);
+        if (!matcher.find()) return body;
+        return matcher.group(1)
+                .replace("\\\"", "\"")
+                .replace("\\\\", "\\")
+                .replace("\\n", "\n")
+                .replace("\\r", "\r")
+                .replace("\\t", "\t");
     }
 
     private static Integer intArg(String query, String name, Integer fallback) {
