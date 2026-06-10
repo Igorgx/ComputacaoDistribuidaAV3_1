@@ -143,96 +143,6 @@ Abra um terminal para cada servico:
 ./scripts/run-java-soap.ps1
 ```
 
-## Demonstracao de CRUD
-
-### REST
-
-REST e a forma mais simples para demonstrar o CRUD ao professor.
-
-```powershell
-$base = "http://127.0.0.1:8001"
-```
-
-Criar usuario:
-
-```powershell
-Invoke-RestMethod -Uri "$base/users" `
-  -Method Post `
-  -ContentType "application/json" `
-  -Body (@{
-    name = "Joao Silva"
-    age = 25
-  } | ConvertTo-Json)
-```
-
-Consultar usuario:
-
-```powershell
-Invoke-RestMethod "$base/users/251"
-```
-
-Atualizar usuario:
-
-```powershell
-Invoke-RestMethod -Uri "$base/users/251" `
-  -Method Put `
-  -ContentType "application/json" `
-  -Body (@{
-    name = "Joao Atualizado"
-    age = 26
-  } | ConvertTo-Json)
-```
-
-Remover usuario:
-
-```powershell
-Invoke-RestMethod -Uri "$base/users/251" -Method Delete
-```
-
-Criar musica:
-
-```powershell
-Invoke-RestMethod -Uri "$base/musics" `
-  -Method Post `
-  -ContentType "application/json" `
-  -Body (@{
-    name = "Musica Nova"
-    artist = "Artista Novo"
-  } | ConvertTo-Json)
-```
-
-Criar playlist:
-
-```powershell
-Invoke-RestMethod -Uri "$base/playlists" `
-  -Method Post `
-  -ContentType "application/json" `
-  -Body (@{
-    name = "Minha Playlist"
-    userId = 1
-    musicIds = @(1, 2, 3, 4, 5)
-  } | ConvertTo-Json)
-```
-
-Consultas relacionais:
-
-```powershell
-Invoke-RestMethod "$base/users/1/playlists"
-Invoke-RestMethod "$base/playlists/1/musics"
-Invoke-RestMethod "$base/musics/1/playlists"
-```
-
-Tambem existem scripts prontos de demonstracao:
-
-```powershell
-./scripts/demo-rest.ps1 -BaseUrl http://127.0.0.1:8001
-./scripts/demo-rest.ps1 -BaseUrl http://127.0.0.1:8101
-./scripts/demo-graphql.ps1 -BaseUrl http://127.0.0.1:8003/graphql
-./scripts/demo-graphql.ps1 -BaseUrl http://127.0.0.1:8103/graphql
-./scripts/demo-soap.ps1 -BaseUrl http://127.0.0.1:8004
-./scripts/demo-soap.ps1 -BaseUrl http://127.0.0.1:8104
-```
-
 ## Testes de Carga
 
 Foram executadas duas cargas:
@@ -387,8 +297,6 @@ Estes graficos mostram qual tecnologia se destacou mais dentro de cada linguagem
 
 ### REST
 
-REST foi a tecnologia mais simples para demonstrar o CRUD. A interface HTTP com JSON facilita a apresentacao ao professor, principalmente com `Invoke-RestMethod`, Postman ou curl.
-
 Resultados principais:
 
 - Python REST moderada: 192.19 req/s, 57.92 ms, 0 falhas.
@@ -438,7 +346,7 @@ Interpretacao:
 
 ### SOAP
 
-SOAP foi implementado com XML puro dentro do envelope SOAP. Uma versao anterior retornava JSON encapsulado, mas isso foi corrigido. Os testes finais usam `text/xml` e respostas XML.
+SOAP foi implementado com XML puro dentro do envelope SOAP. Os testes finais usam `text/xml` e respostas XML.
 
 Resultados principais:
 
@@ -529,49 +437,6 @@ Conclusao sobre os melhores:
 - **GraphQL foi a melhor em flexibilidade de consulta, mas nao em desempenho no Python.**
 - **SOAP foi a melhor representacao de integracao formal/legada com XML, mas teve overhead maior.**
 
-## Problemas Encontrados e Correcoes
-
-Durante os testes, alguns resultados pareciam inconsistentes. Eles foram investigados e corrigidos.
-
-### SOAP com JSON encapsulado
-
-Problema:
-
-- A primeira versao de SOAP retornava JSON dentro do envelope SOAP.
-- Isso distorcia a comparacao, pois SOAP deveria usar XML.
-
-Correcao:
-
-- Python SOAP foi alterado para retornar `AnyXml` com `lxml`.
-- Java SOAP foi alterado para montar XML puro.
-- Os testes SOAP foram refeitos.
-
-### Java REST com falhas no createPlaylist
-
-Problema:
-
-- `POST /playlists` falhava quando o cliente nao enviava `id`.
-- O teste de carga criava playlists sem `id`, esperando que o servidor gerasse automaticamente.
-
-Correcao:
-
-- Java REST passou a tratar `id` ausente como `0`.
-- Os testes REST Java foram refeitos.
-- Resultado final: 0 falhas.
-
-### Java GraphQL com parser simplificado
-
-Problema:
-
-- O parser da query GraphQL dentro do JSON cortava a query quando encontrava aspas escapadas.
-- Isso fazia `userId` virar 0 em `createPlaylist`.
-
-Correcao:
-
-- Foi criada uma extracao de query que aceita caracteres escapados.
-- Os testes GraphQL Java foram refeitos.
-- Resultado final: 0 falhas.
-
 ## Conclusao
 
 O trabalho implementou o mesmo servico em 8 versoes equivalentes, usando 4 tecnologias de invocacao remota e 2 linguagens.
@@ -592,4 +457,4 @@ A escolha ideal depende do objetivo:
 - Consultas flexiveis para clientes diferentes: GraphQL.
 - Integracoes formais ou legadas baseadas em XML: SOAP.
 
-No contexto dos testes realizados, **gRPC foi o vencedor tecnico**, enquanto **REST foi o mais adequado para apresentar o CRUD funcionando de forma clara ao professor**.
+No contexto dos testes realizados, **gRPC foi o vencedor tecnico**.
