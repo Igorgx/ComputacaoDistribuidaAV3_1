@@ -210,22 +210,37 @@ Gerar graficos:
 
 | Implementacao | Requisicoes | Req/s | Tempo medio | P95 | Falhas | Taxa de falha |
 |---|---:|---:|---:|---:|---:|---:|
-| Python REST moderada | 22977 | 192.19 | 57.92 ms | 190 ms | 0 | 0.00% |
-| Python REST alta | 22600 | 190.41 | 1604.46 ms | 2300 ms | 0 | 0.00% |
-| Python gRPC moderada | 25621 | 215.08 | 1.52 ms | 3 ms | 0 | 0.00% |
-| Python gRPC alta | 76391 | 634.64 | 1.39 ms | 3 ms | 0 | 0.00% |
-| Python GraphQL moderada | 16954 | 141.82 | 242.55 ms | 460 ms | 0 | 0.00% |
-| Python GraphQL alta | 15801 | 132.54 | 2489.79 ms | 3400 ms | 79 | 0.50% |
-| Python SOAP moderada | 23707 | 200.12 | 36.62 ms | 510 ms | 0 | 0.00% |
-| Python SOAP alta | 40341 | 336.78 | 708.07 ms | 2100 ms | 3136 | 7.77% |
-| Java REST moderada | 25485 | 214.10 | 4.61 ms | 8 ms | 0 | 0.00% |
-| Java REST alta | 88063 | 741.06 | 67.57 ms | 280 ms | 0 | 0.00% |
-| Java gRPC moderada | 25544 | 215.03 | 1.03 ms | 2 ms | 0 | 0.00% |
-| Java gRPC alta | 100527 | 832.40 | 3.56 ms | 5 ms | 0 | 0.00% |
-| Java GraphQL moderada | 25469 | 214.56 | 4.32 ms | 7 ms | 0 | 0.00% |
-| Java GraphQL alta | 84973 | 711.57 | 84.49 ms | 360 ms | 0 | 0.00% |
-| Java SOAP moderada | 25612 | 214.13 | 3.29 ms | 6 ms | 0 | 0.00% |
-| Java SOAP alta | 83481 | 698.77 | 94.90 ms | 380 ms | 0 | 0.00% |
+| Python REST moderada | 24226 | 202.62 | 34.18 ms | 85 ms | 0 | 0.00% |
+| Python REST alta | 25486 | 214.66 | 1373.36 ms | 1600 ms | 8 | 0.03% |
+| Python gRPC moderada | 25279 | 209.27 | 3.51 ms | 4.94 ms | 0 | 0.00% |
+| Python gRPC alta | 89450 | 740.03 | 63.19 ms | 324.37 ms | 0 | 0.00% |
+| Python GraphQL moderada | 17903 | 150.96 | 198.42 ms | 340 ms | 0 | 0.00% |
+| Python GraphQL alta | 16407 | 137.02 | 2394.58 ms | 2800 ms | 91 | 0.55% |
+| Python SOAP moderada | 23312 | 196.51 | 49.19 ms | 520 ms | 0 | 0.00% |
+| Python SOAP alta | 39471 | 329.81 | 735.38 ms | 2100 ms | 3638 | 9.22% |
+| Java REST moderada | 25723 | 215.14 | 3.33 ms | 6 ms | 0 | 0.00% |
+| Java REST alta | 86807 | 730.35 | 71.62 ms | 310 ms | 0 | 0.00% |
+| Java gRPC moderada | 25531 | 211.46 | 1.43 ms | 2.24 ms | 0 | 0.00% |
+| Java gRPC alta | 100890 | 835.18 | 2.77 ms | 5.55 ms | 0 | 0.00% |
+| Java GraphQL moderada | 25497 | 214.91 | 3.16 ms | 5 ms | 0 | 0.00% |
+| Java GraphQL alta | 95465 | 800.94 | 34.20 ms | 110 ms | 0 | 0.00% |
+| Java SOAP moderada | 25541 | 215.22 | 3.45 ms | 6 ms | 0 | 0.00% |
+| Java SOAP alta | 83188 | 695.97 | 95.35 ms | 370 ms | 0 | 0.00% |
+
+## Comparacao com a Rodada Anterior
+
+Os testes foram executados novamente depois das correcoes nos servicos e da validacao do uso de XML no SOAP. Os novos CSVs estao em `report/results` e os graficos foram regenerados a partir de `summary_metrics.csv`.
+
+Principais diferencas observadas:
+
+- Java GraphQL alta melhorou de 711.57 req/s para 800.94 req/s, com tempo medio caindo de 84.49 ms para 34.20 ms.
+- Java gRPC alta permaneceu como melhor resultado geral, subindo levemente de 832.40 req/s para 835.18 req/s.
+- Python gRPC alta aumentou a vazao de 634.64 req/s para 740.03 req/s, mas a latencia media subiu de 1.39 ms para 63.19 ms. Ainda assim, ficou como melhor resultado em Python na carga alta, sem falhas.
+- Python REST alta melhorou em vazao e latencia, saindo de 190.41 req/s e P95 de 2300 ms para 214.66 req/s e P95 de 1600 ms, mas agora registrou 8 falhas, taxa de 0.03%.
+- Python GraphQL alta melhorou o P95 de 3400 ms para 2800 ms, mas as falhas subiram de 79 para 91.
+- Python SOAP alta manteve comportamento parecido de latencia, mas a taxa de falha aumentou de 7.77% para 9.22%.
+
+Assim, os resultados novos sao diferentes dos anteriores, mas continuam coerentes com a expectativa do trabalho: quando a carga aumenta, as tecnologias e linguagens passam a se separar mais claramente.
 
 ## Graficos Gerais
 
@@ -299,14 +314,14 @@ Estes graficos mostram qual tecnologia se destacou mais dentro de cada linguagem
 
 Resultados principais:
 
-- Python REST moderada: 192.19 req/s, 57.92 ms, 0 falhas.
-- Python REST alta: 190.41 req/s, 1604.46 ms, 0 falhas.
-- Java REST moderada: 214.10 req/s, 4.61 ms, 0 falhas.
-- Java REST alta: 741.06 req/s, 67.57 ms, 0 falhas.
+- Python REST moderada: 202.62 req/s, 34.18 ms, 0 falhas.
+- Python REST alta: 214.66 req/s, 1373.36 ms, 8 falhas, 0.03%.
+- Java REST moderada: 215.14 req/s, 3.33 ms, 0 falhas.
+- Java REST alta: 730.35 req/s, 71.62 ms, 0 falhas.
 
 Interpretacao:
 
-- Em Python, REST se manteve funcional, mas a latencia subiu muito na carga alta. Isso indica fila de requisicoes e saturacao do processo, principalmente por causa de HTTP/JSON, serializacao de listas e acesso sincronizado ao store em memoria.
+- Em Python, REST se manteve funcional, mas a latencia subiu muito na carga alta e apareceram poucas falhas por conexao recusada. A taxa foi baixa, 0.03%, mas indica que o processo ficou proximo do limite sob 400 usuarios virtuais.
 - Em Java, REST teve alta vazao e 0 falhas apos correcao do CRUD de playlists. A versao Java usa servidor HTTP simples da JDK, mas mesmo assim foi bem na carga alta.
 
 ### gRPC
@@ -315,17 +330,18 @@ gRPC foi o melhor resultado geral do trabalho.
 
 Resultados principais:
 
-- Python gRPC moderada: 215.08 req/s, 1.52 ms, 0 falhas.
-- Python gRPC alta: 634.64 req/s, 1.39 ms, 0 falhas.
-- Java gRPC moderada: 215.03 req/s, 1.03 ms, 0 falhas.
-- Java gRPC alta: 832.40 req/s, 3.56 ms, 0 falhas.
+- Python gRPC moderada: 209.27 req/s, 3.51 ms, 0 falhas.
+- Python gRPC alta: 740.03 req/s, 63.19 ms, 0 falhas.
+- Java gRPC moderada: 211.46 req/s, 1.43 ms, 0 falhas.
+- Java gRPC alta: 835.18 req/s, 2.77 ms, 0 falhas.
 
 Interpretacao:
 
-- gRPC teve as menores latencias.
+- gRPC teve as melhores combinacoes de vazao, latencia e estabilidade.
 - Protobuf reduz custo de serializacao.
 - O canal gRPC persistente reduz overhead de conexao.
-- Java gRPC foi o melhor resultado geral, com maior vazao e baixa latencia.
+- Java gRPC foi o melhor resultado geral, com maior vazao e menor P95 na carga alta.
+- Python gRPC teve latencia maior na nova rodada do que na anterior, mas continuou muito superior aos outros servicos Python na carga alta e manteve 0 falhas.
 
 ### GraphQL
 
@@ -333,15 +349,15 @@ GraphQL ofereceu a maior flexibilidade de consulta, mas teve custo maior no Pyth
 
 Resultados principais:
 
-- Python GraphQL moderada: 141.82 req/s, 242.55 ms, 0 falhas.
-- Python GraphQL alta: 132.54 req/s, 2489.79 ms, 79 falhas, 0.50%.
-- Java GraphQL moderada: 214.56 req/s, 4.32 ms, 0 falhas.
-- Java GraphQL alta: 711.57 req/s, 84.49 ms, 0 falhas.
+- Python GraphQL moderada: 150.96 req/s, 198.42 ms, 0 falhas.
+- Python GraphQL alta: 137.02 req/s, 2394.58 ms, 91 falhas, 0.55%.
+- Java GraphQL moderada: 214.91 req/s, 3.16 ms, 0 falhas.
+- Java GraphQL alta: 800.94 req/s, 34.20 ms, 0 falhas.
 
 Interpretacao:
 
 - Em Python, GraphQL foi pesado sob carga alta porque cada requisicao precisa passar por parse da query, resolucao de campos e execucao de resolvers.
-- Em Java, apos correcao do parser da query GraphQL no JSON, a implementacao ficou estavel e com boa vazao.
+- Em Java, apos correcao do parser da query GraphQL no JSON, a implementacao ficou estavel e teve uma melhora forte na nova rodada.
 - Mesmo em Java, GraphQL ficou com latencia maior que gRPC, o que e esperado pelo custo adicional de interpretacao das queries.
 
 ### SOAP
@@ -350,14 +366,14 @@ SOAP foi implementado com XML puro dentro do envelope SOAP. Os testes finais usa
 
 Resultados principais:
 
-- Python SOAP moderada: 200.12 req/s, 36.62 ms, 0 falhas.
-- Python SOAP alta: 336.78 req/s, 708.07 ms, 3136 falhas, 7.77%.
-- Java SOAP moderada: 214.13 req/s, 3.29 ms, 0 falhas.
-- Java SOAP alta: 698.77 req/s, 94.90 ms, 0 falhas.
+- Python SOAP moderada: 196.51 req/s, 49.19 ms, 0 falhas.
+- Python SOAP alta: 329.81 req/s, 735.38 ms, 3638 falhas, 9.22%.
+- Java SOAP moderada: 215.22 req/s, 3.45 ms, 0 falhas.
+- Java SOAP alta: 695.97 req/s, 95.35 ms, 0 falhas.
 
 Interpretacao:
 
-- SOAP em Python sofreu na carga alta, com aumento de latencia e falhas.
+- SOAP em Python sofreu na carga alta, com aumento de latencia e falhas. O resultado e coerente com o uso de XML puro, que exige mais CPU para montar e interpretar envelopes.
 - O uso de XML aumenta o custo de parsing e serializacao.
 - SOAP em Java ficou estavel, mas com latencia maior que gRPC, o que condiz com o overhead do XML.
 - SOAP continua sendo adequado quando o contexto exige XML, contrato formal ou integracao com sistemas legados.
@@ -370,23 +386,23 @@ Ranking na carga alta por desempenho geral:
 
 | Tecnologia | Req/s | Tempo medio | P95 | Falhas |
 |---|---:|---:|---:|---:|
-| gRPC | 634.64 | 1.39 ms | 3 ms | 0 |
-| SOAP | 336.78 | 708.07 ms | 2100 ms | 3136 |
-| REST | 190.41 | 1604.46 ms | 2300 ms | 0 |
-| GraphQL | 132.54 | 2489.79 ms | 3400 ms | 79 |
+| gRPC | 740.03 | 63.19 ms | 324.37 ms | 0 |
+| SOAP | 329.81 | 735.38 ms | 2100 ms | 3638 |
+| REST | 214.66 | 1373.36 ms | 1600 ms | 8 |
+| GraphQL | 137.02 | 2394.58 ms | 2800 ms | 91 |
 
 Melhor em Python: **gRPC**.
 
 Motivos:
 
-- Menor latencia.
+- Melhor equilibrio entre vazao, latencia e estabilidade na carga alta.
 - Maior vazao.
 - Nenhuma falha.
 - Menor overhead de serializacao por usar Protobuf.
 
 Observacoes:
 
-- REST Python foi estavel, mas enfileirou requisicoes na carga alta.
+- REST Python melhorou em relacao a rodada anterior, mas ainda enfileirou requisicoes na carga alta.
 - GraphQL Python teve o maior custo de processamento.
 - SOAP Python mostrou instabilidade com XML sob carga alta.
 
@@ -396,10 +412,10 @@ Ranking na carga alta por desempenho geral:
 
 | Tecnologia | Req/s | Tempo medio | P95 | Falhas |
 |---|---:|---:|---:|---:|
-| gRPC | 832.40 | 3.56 ms | 5 ms | 0 |
-| REST | 741.06 | 67.57 ms | 280 ms | 0 |
-| GraphQL | 711.57 | 84.49 ms | 360 ms | 0 |
-| SOAP | 698.77 | 94.90 ms | 380 ms | 0 |
+| gRPC | 835.18 | 2.77 ms | 5.55 ms | 0 |
+| GraphQL | 800.94 | 34.20 ms | 110 ms | 0 |
+| REST | 730.35 | 71.62 ms | 310 ms | 0 |
+| SOAP | 695.97 | 95.35 ms | 370 ms | 0 |
 
 Melhor em Java: **gRPC**.
 
@@ -413,7 +429,7 @@ Motivos:
 Observacoes:
 
 - REST Java tambem foi forte e simples de demonstrar.
-- GraphQL Java ficou estavel apos correcao do parser.
+- GraphQL Java ficou estavel apos correcao do parser e, na nova rodada, passou REST em vazao e latencia.
 - SOAP Java mostrou que XML pode ser viavel quando o servidor lida bem com a carga, mas ainda ficou atras de gRPC.
 
 ## Melhores Resultados
@@ -422,13 +438,13 @@ Melhor resultado geral:
 
 | Criterio | Melhor implementacao | Resultado |
 |---|---|---|
-| Maior vazao | Java gRPC alta | 832.40 req/s |
-| Menor tempo medio | Python gRPC alta | 1.39 ms |
-| Menor P95 em carga alta | Python gRPC alta | 3 ms |
+| Maior vazao | Java gRPC alta | 835.18 req/s |
+| Menor tempo medio | Java gRPC moderada | 1.43 ms |
+| Menor P95 em carga alta | Java gRPC alta | 5.55 ms |
 | Melhor estabilidade | gRPC Python e Java | 0 falhas |
 | Melhor para demonstrar CRUD | REST | Chamadas HTTP simples |
-| Melhor em Python | Python gRPC | 634.64 req/s, 1.39 ms |
-| Melhor em Java | Java gRPC | 832.40 req/s, 3.56 ms |
+| Melhor em Python | Python gRPC | 740.03 req/s, 63.19 ms |
+| Melhor em Java | Java gRPC | 835.18 req/s, 2.77 ms |
 
 Conclusao sobre os melhores:
 
