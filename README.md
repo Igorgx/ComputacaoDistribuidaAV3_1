@@ -6,9 +6,9 @@ Trabalho de Computacao Distribuida sobre comparacao de tecnologias de invocacao 
 
 Membros da equipe:
 
-- Nome 1: preencher
-- Nome 2: preencher
-- Nome 3: preencher
+- Igor Gomes Ximenes - 2217665
+- Gabril Abreu Cunha de Alencar - 2315097
+- Kalil Smith Pinto Palheta - 2223857
 
 ## Resumo do Projeto
 
@@ -21,7 +21,7 @@ O projeto implementa o mesmo servico de streaming de musicas em 8 versoes difere
 - Python
 - Java
 
-O objetivo e comparar similaridades, diferencas, vantagens, desvantagens e desempenho das tecnologias. O sistema nao transmite MP3 nem audio real. Ele simula o backend de um servico de streaming por meio de metadados de usuarios, musicas e playlists.
+O objetivo é comparar similaridades, diferencas, vantagens, desvantagens e desempenho das tecnologias. O sistema nao transmite MP3 nem audio real. Ele simula o backend de um servico de streaming por meio de metadados de usuarios, musicas e playlists.
 
 Todas as implementacoes oferecem as mesmas funcionalidades:
 
