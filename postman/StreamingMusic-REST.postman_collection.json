@@ -1,0 +1,224 @@
+{
+  "info": {
+    "_postman_id": "d7eec3f5-0a42-4a82-a0c9-streaming-rest",
+    "name": "Streaming Music - REST",
+    "description": "Colecao para demonstrar CRUD e consultas relacionais REST nas implementacoes Python e Java.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "pythonRestUrl",
+      "value": "http://127.0.0.1:8001"
+    },
+    {
+      "key": "javaRestUrl",
+      "value": "http://127.0.0.1:8101"
+    },
+    {
+      "key": "restUrl",
+      "value": "http://127.0.0.1:8001"
+    }
+  ],
+  "item": [
+    {
+      "name": "REST - Usar Python 8001",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('restUrl', pm.collectionVariables.get('pythonRestUrl'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/health",
+        "description": "Aponta as proximas chamadas REST para Python na porta 8001."
+      }
+    },
+    {
+      "name": "REST - Usar Java 8101",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('restUrl', pm.collectionVariables.get('javaRestUrl'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/health",
+        "description": "Aponta as proximas chamadas REST para Java na porta 8101."
+      }
+    },
+    {
+      "name": "Listar Usuarios",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/users"
+      }
+    },
+    {
+      "name": "Buscar Usuario 1",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/users/1"
+      }
+    },
+    {
+      "name": "Criar Usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 251,\n  \"name\": \"Usuario REST Postman\",\n  \"age\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{restUrl}}/users",
+        "description": "CRUD: cria um usuario com ID 251 para facilitar a exclusao depois."
+      }
+    },
+    {
+      "name": "Atualizar Usuario 251",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Usuario REST Atualizado\",\n  \"age\": 30\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{restUrl}}/users/251"
+      }
+    },
+    {
+      "name": "Excluir Usuario 251",
+      "request": {
+        "method": "DELETE",
+        "url": "{{restUrl}}/users/251",
+        "description": "CRUD: exclui o usuario criado pelo item 'Criar Usuario'."
+      }
+    },
+    {
+      "name": "Listar Musicas",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/musics"
+      }
+    },
+    {
+      "name": "Buscar Musica 1",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/musics/1"
+      }
+    },
+    {
+      "name": "Listar Playlists",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/playlists"
+      }
+    },
+    {
+      "name": "Criar Playlist",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 401,\n  \"name\": \"Playlist REST Postman\",\n  \"userId\": 1,\n  \"musicIds\": [1, 2, 3]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{restUrl}}/playlists",
+        "description": "CRUD: cria uma playlist com ID 401 para facilitar a exclusao depois."
+      }
+    },
+    {
+      "name": "Atualizar Playlist 401",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Playlist REST Atualizada\",\n  \"userId\": 1,\n  \"musicIds\": [1, 2, 3, 4]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{restUrl}}/playlists/401"
+      }
+    },
+    {
+      "name": "Excluir Playlist 401",
+      "request": {
+        "method": "DELETE",
+        "url": "{{restUrl}}/playlists/401",
+        "description": "CRUD: exclui a playlist criada pelo item 'Criar Playlist'."
+      }
+    },
+    {
+      "name": "Playlists do Usuario 1",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/users/1/playlists"
+      }
+    },
+    {
+      "name": "Musicas da Playlist 1",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/playlists/1/musics"
+      }
+    },
+    {
+      "name": "Playlists com a Musica 1",
+      "request": {
+        "method": "GET",
+        "url": "{{restUrl}}/musics/1/playlists"
+      }
+    }
+  ]
+}

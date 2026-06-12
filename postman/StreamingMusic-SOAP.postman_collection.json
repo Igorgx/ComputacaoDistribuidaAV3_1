@@ -1,0 +1,414 @@
+{
+  "info": {
+    "_postman_id": "7d583dd7-2a9e-4b90-96f8-streaming-soap",
+    "name": "Streaming Music - SOAP XML",
+    "description": "Colecao para demonstrar SOAP com XML puro nas implementacoes Python e Java do servico fake de streaming de musicas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "pythonSoapUrl",
+      "value": "http://127.0.0.1:8004"
+    },
+    {
+      "key": "javaSoapUrl",
+      "value": "http://127.0.0.1:8104"
+    },
+    {
+      "key": "soapUrl",
+      "value": "http://127.0.0.1:8004"
+    }
+  ],
+  "item": [
+    {
+      "name": "SOAP - Usar Python 8004",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('soapUrl', pm.collectionVariables.get('pythonSoapUrl'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{soapUrl}}/?wsdl",
+          "host": [
+            "{{soapUrl}}"
+          ],
+          "query": [
+            {
+              "key": "wsdl",
+              "value": null
+            }
+          ]
+        },
+        "description": "Executa esta requisicao para apontar as proximas chamadas SOAP para o servidor Python na porta 8004."
+      }
+    },
+    {
+      "name": "SOAP - Usar Java 8104",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('soapUrl', pm.collectionVariables.get('javaSoapUrl'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{soapUrl}}/?wsdl",
+          "host": [
+            "{{soapUrl}}"
+          ],
+          "query": [
+            {
+              "key": "wsdl",
+              "value": null
+            }
+          ]
+        },
+        "description": "Executa esta requisicao para apontar as proximas chamadas SOAP para o servidor Java na porta 8104."
+      }
+    },
+    {
+      "name": "WSDL - Contrato SOAP",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{soapUrl}}/?wsdl",
+          "host": [
+            "{{soapUrl}}"
+          ],
+          "query": [
+            {
+              "key": "wsdl",
+              "value": null
+            }
+          ]
+        },
+        "description": "Mostra o contrato do servico SOAP."
+      }
+    },
+    {
+      "name": "Listar Musicas",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <listMusics xmlns=\"music.streaming.soap\"/>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Lista as musicas populadas no seed. A resposta deve aparecer como XML puro."
+      }
+    },
+    {
+      "name": "Listar Usuarios",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <listUsers xmlns=\"music.streaming.soap\"/>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Lista todos os usuarios do servico."
+      }
+    },
+    {
+      "name": "Buscar Usuario 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <getUser xmlns=\"music.streaming.soap\">\n      <userId>1</userId>\n    </getUser>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Busca um usuario especifico por ID."
+      }
+    },
+    {
+      "name": "Listar Playlists",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <listPlaylists xmlns=\"music.streaming.soap\"/>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Lista todas as playlists."
+      }
+    },
+    {
+      "name": "Listar Playlists do Usuario 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <listPlaylistsByUser xmlns=\"music.streaming.soap\">\n      <userId>1</userId>\n    </listPlaylistsByUser>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Consulta relacional: playlists de um usuario."
+      }
+    },
+    {
+      "name": "Listar Musicas da Playlist 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <listMusicsByPlaylist xmlns=\"music.streaming.soap\">\n      <playlistId>1</playlistId>\n    </listMusicsByPlaylist>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Consulta relacional: musicas de uma playlist."
+      }
+    },
+    {
+      "name": "Listar Playlists com a Musica 1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <listPlaylistsByMusic xmlns=\"music.streaming.soap\">\n      <musicId>1</musicId>\n    </listPlaylistsByMusic>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "Consulta relacional: playlists que contem uma musica."
+      }
+    },
+    {
+      "name": "Criar Usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <createUser xmlns=\"music.streaming.soap\">\n      <id>0</id>\n      <name>Usuario SOAP Postman</name>\n      <age>25</age>\n    </createUser>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "CRUD: cria um usuario. ID 0 indica que o servico deve gerar o proximo ID."
+      }
+    },
+    {
+      "name": "Criar Playlist",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <createPlaylist xmlns=\"music.streaming.soap\">\n      <id>0</id>\n      <name>Playlist SOAP Postman</name>\n      <userId>1</userId>\n      <musicIdsCsv>1,2,3</musicIdsCsv>\n    </createPlaylist>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "CRUD: cria uma playlist relacionada ao usuario 1 e as musicas 1, 2 e 3."
+      }
+    },
+    {
+      "name": "Excluir Playlist 401",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <deletePlaylist xmlns=\"music.streaming.soap\">\n      <id>401</id>\n    </deletePlaylist>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "CRUD: exclui a playlist 401. Para demonstrar com seguranca, execute antes 'Criar Playlist', que normalmente cria a playlist 401 no seed inicial."
+      }
+    },
+    {
+      "name": "Excluir Usuario 251",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <deleteUser xmlns=\"music.streaming.soap\">\n      <id>251</id>\n    </deleteUser>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{soapUrl}}",
+          "host": [
+            "{{soapUrl}}"
+          ]
+        },
+        "description": "CRUD: exclui o usuario 251. Para demonstrar com seguranca, execute antes 'Criar Usuario', que normalmente cria o usuario 251 no seed inicial."
+      }
+    }
+  ]
+}

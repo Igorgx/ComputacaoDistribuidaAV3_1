@@ -8,6 +8,13 @@ Membros da equipe:
 - Gabril Abreu Cunha de Alencar - 2315097
 - Kalil Smith Pinto Palheta - 2223857
 
+## Observacoes Pos-Apresentacao
+
+Depois da apresentacao, dois pontos foram revisados:
+
+- **Java GraphQL respeitando campos solicitados:** a implementacao Java GraphQL foi ajustada para retornar apenas os campos pedidos na query. Antes, ao executar uma consulta como `{ musics { id name } }`, o Java ainda retornava `artist`. Agora o comportamento ficou igual ao GraphQL Python: se `artist` nao for solicitado, ele nao aparece na resposta.
+- **P95 e falhas do Python GraphQL em carga alta:** os graficos mostram P95 alto e algumas falhas no Python GraphQL alta. Isso foi conferido nos CSVs e esta coerente com os testes: as falhas foram `ConnectionRefusedError`, indicando saturacao do servidor sob 400 usuarios virtuais, nao erro de regra de negocio ou de query GraphQL. Na carga moderada, Python GraphQL teve 0 falhas; em Java GraphQL, as duas cargas tiveram 0 falhas.
+
 ## Resumo do Projeto
 
 O projeto implementa o mesmo servico de streaming de musicas em 8 versoes diferentes, combinando 4 tecnologias de invocacao remota com 2 linguagens de programacao:
@@ -88,9 +95,71 @@ java/soap         SOAP em Java
 
 shared            Documentacao do modelo
 scripts           Scripts de setup, execucao e demonstracao
+postman           Colecoes para demonstrar REST, GraphQL e SOAP
 load-tests        Testes de carga
 report/results    Resultados CSV/HTML e graficos
 ```
+
+## Como Executar
+
+### Preparacao
+
+```powershell
+cd "C:\AV3 Computação Distribuída 1"
+./scripts/setup-python.ps1
+./scripts/setup-maven.ps1
+```
+
+O Java REST, GraphQL e SOAP usam a JDK. O Java gRPC usa Maven local instalado pelo script.
+
+### Subir os Servicos Python
+
+Abra um terminal para cada servico:
+
+```powershell
+./scripts/run-python-rest.ps1
+./scripts/run-python-grpc.ps1
+./scripts/run-python-graphql.ps1
+./scripts/run-python-soap.ps1
+```
+
+### Subir os Servicos Java
+
+Abra um terminal para cada servico:
+
+```powershell
+./scripts/run-java-rest.ps1
+./scripts/run-java-grpc.ps1
+./scripts/run-java-graphql.ps1
+./scripts/run-java-soap.ps1
+```
+
+## Demonstracao no Postman
+
+Foram adicionadas colecoes Postman para facilitar a apresentacao do CRUD e das consultas relacionais sem depender do terminal.
+
+Arquivos:
+
+- `postman/StreamingMusic-REST.postman_collection.json`
+- `postman/StreamingMusic-GraphQL.postman_collection.json`
+- `postman/StreamingMusic-SOAP.postman_collection.json`
+
+Como usar:
+
+1. Abra o Postman.
+2. Clique em `Import`.
+3. Importe os arquivos da pasta `postman`.
+4. Suba o servico desejado em um terminal.
+5. Execute primeiro a requisicao `Usar Python` ou `Usar Java` dentro da colecao.
+6. Execute as operacoes de listagem, criacao, atualizacao e exclusao.
+
+Recomendacao para apresentacao:
+
+- Use REST para mostrar CRUD de forma mais direta, com `GET`, `POST`, `PUT` e `DELETE`.
+- Use SOAP para provar o XML puro, mostrando a aba `Body > Pretty` no Postman.
+- Use GraphQL para mostrar que todas as operacoes passam por uma unica rota `/graphql`, mudando apenas a query/mutation.
+
+No SOAP, a resposta deve aparecer em XML, com tags como `soap:Envelope`, `soap:Body`, `musics`, `users` e `playlists`.
 
 ## Testes de Carga
 
