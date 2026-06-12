@@ -104,14 +104,6 @@ report/results    Resultados CSV/HTML e graficos
 
 ## Como Executar
 
-### Preparacao
-
-```powershell
-cd "C:\AV3 Computação Distribuída 1"
-./scripts/setup-python.ps1
-./scripts/setup-maven.ps1
-```
-
 O Java REST, GraphQL e SOAP usam a JDK. O Java gRPC usa Maven local instalado pelo script.
 
 ## Testes de Carga
