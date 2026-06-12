@@ -159,21 +159,6 @@ Metricas coletadas:
 | Java SOAP moderada | 25541 | 215.22 | 3.45 ms | 6 ms | 0 | 0.00% |
 | Java SOAP alta | 83188 | 695.97 | 95.35 ms | 370 ms | 0 | 0.00% |
 
-## Comparacao com a Rodada Anterior
-
-Os testes foram executados novamente depois das correcoes nos servicos e da validacao do uso de XML no SOAP. Os novos CSVs estao em `report/results` e os graficos foram regenerados a partir de `summary_metrics.csv`.
-
-Principais diferencas observadas:
-
-- Java GraphQL alta melhorou de 711.57 req/s para 800.94 req/s, com tempo medio caindo de 84.49 ms para 34.20 ms.
-- Java gRPC alta permaneceu como melhor resultado geral, subindo levemente de 832.40 req/s para 835.18 req/s.
-- Python gRPC alta aumentou a vazao de 634.64 req/s para 740.03 req/s, mas a latencia media subiu de 1.39 ms para 63.19 ms. Ainda assim, ficou como melhor resultado em Python na carga alta, sem falhas.
-- Python REST alta melhorou em vazao e latencia, saindo de 190.41 req/s e P95 de 2300 ms para 214.66 req/s e P95 de 1600 ms, mas agora registrou 8 falhas, taxa de 0.03%.
-- Python GraphQL alta melhorou o P95 de 3400 ms para 2800 ms, mas as falhas subiram de 79 para 91.
-- Python SOAP alta manteve comportamento parecido de latencia, mas a taxa de falha aumentou de 7.77% para 9.22%.
-
-Assim, os resultados novos sao diferentes dos anteriores, mas continuam coerentes com a expectativa do trabalho: quando a carga aumenta, as tecnologias e linguagens passam a se separar mais claramente.
-
 ## Graficos Gerais
 
 ### Requisicoes por Segundo
