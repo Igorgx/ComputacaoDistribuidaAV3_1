@@ -15,7 +15,7 @@ Depois da apresentacao, dois pontos foram revisados:
 - **Java GraphQL respeitando campos solicitados:** a implementacao Java GraphQL foi ajustada para retornar apenas os campos pedidos na query. Antes, ao executar uma consulta como `{ musics { id name } }`, o Java ainda retornava `artist`. Agora o comportamento ficou igual ao GraphQL Python: se `artist` nao for solicitado, ele nao aparece na resposta.
 - <img width="322" height="202" alt="image" src="https://github.com/user-attachments/assets/8d698792-806d-4f55-aa1f-339a2722aba5" />
 
-- **P95 e falhas do Python GraphQL em carga alta:** os graficos mostram P95 alto e algumas falhas no Python GraphQL alta. Isso foi conferido nos CSVs e esta coerente com os testes: as falhas foram `ConnectionRefusedError`, indicando saturacao do servidor sob 400 usuarios virtuais, nao erro de regra de negocio ou de query GraphQL. Na carga moderada, Python GraphQL teve 0 falhas; em Java GraphQL, as duas cargas tiveram 0 falhas.
+- **P95 e falhas do Python GraphQL em carga alta:** os graficos mostram P95 alto e algumas falhas no Python GraphQL alta. Isso foi conferido nos CSVs e esta coerente com os testes: as falhas foram `ConnectionRefusedError`, indicando saturacao do servidor sob 400 usuarios virtuais, nao foi erro de regra de negocio ou de query GraphQL. Na carga moderada, Python GraphQL teve 0 falhas; em Java GraphQL, as duas cargas tiveram 0 falhas.
 
 ## Resumo do Projeto
 
