@@ -1,7 +1,5 @@
 # Relatorio - Comparacao de Tecnologias de Invocacao Remota
 
-## Identificacao
-
 Trabalho de Computacao Distribuida sobre comparacao de tecnologias de invocacao remota por meio da implementacao de um servico fake de streaming de musicas.
 
 Membros da equipe:
@@ -109,40 +107,6 @@ load-tests        Testes de carga
 report/results    Resultados CSV/HTML e graficos
 ```
 
-## Como Executar
-
-### Preparacao
-
-```powershell
-cd "C:\AV3 Computação Distribuída 1"
-./scripts/setup-python.ps1
-./scripts/setup-maven.ps1
-```
-
-O Java REST, GraphQL e SOAP usam a JDK. O Java gRPC usa Maven local instalado pelo script.
-
-### Subir os Servicos Python
-
-Abra um terminal para cada servico:
-
-```powershell
-./scripts/run-python-rest.ps1
-./scripts/run-python-grpc.ps1
-./scripts/run-python-graphql.ps1
-./scripts/run-python-soap.ps1
-```
-
-### Subir os Servicos Java
-
-Abra um terminal para cada servico:
-
-```powershell
-./scripts/run-java-rest.ps1
-./scripts/run-java-grpc.ps1
-./scripts/run-java-graphql.ps1
-./scripts/run-java-soap.ps1
-```
-
 ## Testes de Carga
 
 Foram executadas duas cargas:
@@ -173,38 +137,6 @@ Metricas coletadas:
 - Percentil 95.
 - Falhas absolutas.
 - Taxa de falha.
-
-Exemplo de execucao REST:
-
-```powershell
-./scripts/run-load.ps1 -Class MusicHttpUser -HostUrl http://127.0.0.1:8001 -Users 100 -SpawnRate 20 -RunTime 2m -Protocol rest -Out python_rest_moderada
-./scripts/run-load.ps1 -Class MusicHttpUser -HostUrl http://127.0.0.1:8001 -Users 400 -SpawnRate 80 -RunTime 2m -Protocol rest -Out python_rest_alta
-```
-
-Exemplo de execucao GraphQL:
-
-```powershell
-./scripts/run-load.ps1 -Class MusicHttpUser -HostUrl http://127.0.0.1:8003 -Users 400 -SpawnRate 80 -RunTime 2m -Protocol graphql -Out python_graphql_alta
-```
-
-Exemplo de execucao SOAP:
-
-```powershell
-./scripts/run-load.ps1 -Class MusicHttpUser -HostUrl http://127.0.0.1:8004 -Users 400 -SpawnRate 80 -RunTime 2m -Protocol soap -Out python_soap_alta
-```
-
-Exemplo de execucao gRPC:
-
-```powershell
-./scripts/run-grpc-load.ps1 -Target 127.0.0.1:8002 -Users 400 -SpawnRate 80 -RunTimeSeconds 120 -Out python_grpc_alta
-./scripts/run-grpc-load.ps1 -Target 127.0.0.1:8102 -Users 400 -SpawnRate 80 -RunTimeSeconds 120 -Out java_grpc_alta
-```
-
-Gerar graficos:
-
-```powershell
-./.venv/Scripts/python.exe ./report/generate_charts.py
-```
 
 ## Resultados Consolidados
 
