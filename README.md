@@ -19,21 +19,6 @@ O projeto implementa o mesmo servico de streaming de musicas em 8 versoes difere
 - Python
 - Java
 
-O objetivo é comparar similaridades, diferencas, vantagens, desvantagens e desempenho das tecnologias. O sistema nao transmite MP3 nem audio real. Ele simula o backend de um servico de streaming por meio de metadados de usuarios, musicas e playlists.
-
-Todas as implementacoes oferecem as mesmas funcionalidades:
-
-- CRUD de usuarios.
-- CRUD de musicas.
-- CRUD de playlists.
-- Listagem de todos os usuarios.
-- Listagem de todas as musicas.
-- Listagem de playlists de um usuario.
-- Listagem de musicas de uma playlist.
-- Listagem de playlists que contem uma musica.
-
-A persistencia e em memoria, como permitido pelo enunciado. Todas as implementacoes usam a mesma massa inicial de dados para permitir comparacao justa.
-
 ## Massa de Dados
 
 Todas as implementacoes inicializam os dados em memoria com o mesmo padrao:
