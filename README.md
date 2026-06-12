@@ -102,10 +102,6 @@ load-tests        Testes de carga
 report/results    Resultados CSV/HTML e graficos
 ```
 
-## Como Executar
-
-O Java REST, GraphQL e SOAP usam a JDK. O Java gRPC usa Maven local instalado pelo script.
-
 ## Testes de Carga
 
 Foram executadas duas cargas:
