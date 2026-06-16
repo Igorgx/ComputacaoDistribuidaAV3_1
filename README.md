@@ -5,7 +5,7 @@ Trabalho de Computacao Distribuida sobre comparacao de tecnologias de invocacao 
 Membros da equipe:
 
 - Igor Gomes Ximenes - 2217665
-- Gabril Abreu Cunha de Alencar - 2315097
+- Gabriel Abreu Cunha de Alencar - 2315097
 - Kalil Smith Pinto Palheta - 2223857
 
 ## Observacoes Pos-Apresentacao
